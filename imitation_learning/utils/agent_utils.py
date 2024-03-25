@@ -17,6 +17,9 @@ def downsample_and_extract_lidar(observ, observation_shape, downsampling_method)
     processed_lidar_scan = downsampling.downsample(lidar_scan, observation_shape, downsampling_method)
     return processed_lidar_scan
 
+def add_noise_to_lidar(scan, noise):
+    return scan + np.random.uniform(-noise, noise, scan.shape)
+
 def sample_traj(env, policy, start_pose, max_traj_len, observation_shape=108, downsampling_method="simple", render=True, render_mode="human_fast", for_eval=False):
     """
     Samples a trajectory of at most `max_traj_len` timesteps by executing a policy.
