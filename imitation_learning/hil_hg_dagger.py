@@ -82,19 +82,23 @@ def hil_hg_dagger(seed, agent, expert, env, start_pose, observation_shape, downs
                 actions = np.expand_dims(raw_agent_action, axis=0)
                 expert_action = get_expert_action(joystick)
                 
+                is_expert_action = False
                 if  expert_action[0,0] < -0.01 or 0.01 < expert_action[0,0]:
                     actions[0,0] = expert_action[0,0]
+                    is_expert_action = True
 
                 if  expert_action[0,1] < -0.01 or 0.01 < expert_action[0,1]:
                     actions[0,1] = expert_action[0,1]
+                    is_expert_action = True
 
-                traj["observs"].append(observ)
-                traj["poses_x"].append(observ["poses_x"][0])
-                traj["poses_y"].append(observ["poses_y"][0])
-                traj["poses_theta"].append(observ["poses_theta"][0])
-                traj["scans"].append(downsampled_scan)
-                traj["actions"].append(actions)
-                traj["reward"]+=step_reward
+                if is_expert_action: 
+                    traj["observs"].append(observ)
+                    traj["poses_x"].append(observ["poses_x"][0])
+                    traj["poses_y"].append(observ["poses_y"][0])
+                    traj["poses_theta"].append(observ["poses_theta"][0])
+                    traj["scans"].append(downsampled_scan)
+                    traj["actions"].append(actions)
+                    traj["reward"]+=step_reward
                 
                 observ, reward, done, _ = env.step(actions)
                 env.render(mode=render_mode)
